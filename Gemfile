@@ -10,6 +10,9 @@ gem 'jquery-rails',       '4.0.3'
 gem 'turbolinks',         '2.3.0'
 gem 'jbuilder',           '2.2.3'
 gem 'sdoc',               '0.4.0', group: :doc
+gem 'faker',              '~>1'
+gem 'will_paginate',           '3.3.1'
+gem 'bootstrap-will_paginate', '1.0.0'
 
 gem 'sprockets',          '2.12.5'
 gem 'thor',               '0.19.1'
