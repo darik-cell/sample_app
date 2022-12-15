@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  has_many :microposts, dependent: :destroy
+  
   attr_accessor :remember_token, :activation_token, :reset_token
 
   before_save :downcase_email
@@ -45,8 +47,7 @@ class User < ActiveRecord::Base
 
   # Активирует аккаунт.
   def activate
-    update_attribute(:activated, true)
-    update_attribute(:activated_at, Time.zone.now)
+    update_columns(activated: true, activated_at: Time.zone.now)
   end
 
   # Отправляет электронное письмо для активации.
@@ -57,8 +58,7 @@ class User < ActiveRecord::Base
   # Устанавливает атрибуты для сброса пароля.
   def create_reset_digest
     self.reset_token = User.new_token
-    update_attribute(:reset_digest,  User.digest(reset_token))
-    update_attribute(:reset_sent_at, Time.zone.now)
+    update_columns(reset_digest:  User.digest(reset_token), reset_sent_at: Time.zone.now)
   end
 
   # Отправляет электронное письмо для сброса пароля.
@@ -69,6 +69,12 @@ class User < ActiveRecord::Base
   # Возвращает true, если истек срок давности ссылки для сброса пароля .
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
+  end
+
+  # Определяет прото-ленту.
+  # Полная реализация в "Следовании за пользователями".
+  def feed
+    Micropost.where("user_id = ?", id)
   end
 
   private
